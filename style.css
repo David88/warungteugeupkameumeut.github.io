@@ -1,9 +1,9 @@
 body {
-    font-family: 'Fredoka', sans-serif;
-    background: url('img/background.jpg') repeat;
-    background-size: cover;
-    background-color: #fff8e1;
-  }
+  font-family: 'Fredoka', sans-serif;
+  background: url('img/background.jpg') no-repeat center center fixed;
+  background-size: cover;
+  background-color: #fff8e1;
+}
   
   header {
     background-color: rgba(255, 224, 130, 0.9);
