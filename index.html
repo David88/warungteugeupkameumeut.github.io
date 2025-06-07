@@ -11,10 +11,28 @@
 <body>
   <!-- Isi HTML tetap seperti sebelumnya -->
   <!-- Potongan isi HTML bisa dimasukkan kembali dari versi sebelumnya -->
-</body>
-</html>
+<body>
+  <div id="form-pemesan">
+    <form onsubmit="simpanDataPemesan(event)">
+      <h5 class="text-center mb-3">Isi Data Pemesan</h5>
+      <div class="mb-3">
+        <label>Nama</label>
+        <input type="text" id="namaPemesan" class="form-control" required>
+      </div>
+      <div class="mb-3">
+        <label>Pesanan Antar Kemana Bosss?</label>
+        <input type="text" id="alamatPemesan" class="form-control" required>
+      </div>
+      <div class="mb-3">
+        <label>Nomor WA</label>
+        <input type="tel" id="hpPemesan" class="form-control" required>
+      </div>
+      <button type="submit" class="btn btn-success w-100">Simpan</button>
+    </form>
+  </div>
+
   <header>
-    <h1>Warung Teugeup Kameumeut</h1>
+    <h1>WARUNG TEUGEUP KAMEUMEUT</h1>
     <p>Aneka Makanan & Minuman Segar</p>
   </header>
 
@@ -104,20 +122,24 @@
 
     function updateLinkWA() {
       const nomor = '628996217133';
+      const nama = localStorage.getItem('namaPemesan') || '-';
+      const alamat = localStorage.getItem('alamatPemesan') || '-';
+      const hp = localStorage.getItem('hpPemesan') || '-';
+
       let daftar = Object.keys(jumlah).filter(key => jumlah[key].qty > 0).map((item, i) => {
         return `${i + 1}. ${item} x ${jumlah[item].qty} = Rp${(jumlah[item].qty * jumlah[item].harga).toLocaleString()}`;
       }).join('%0A');
-
-      const teks = `Halo Warung Teugeup Kameumeut,%0ASaya ingin memesan:%0A${daftar}`;
-      const link = `https://wa.me/${nomor}?text=${teks}`;
-
-      if (document.getElementById('pesanBtn')) document.getElementById('pesanBtn').href = link;
-      if (document.getElementById('pesanBtn2')) document.getElementById('pesanBtn2').href = link;
 
       const total = Object.values(jumlah).reduce((acc, item) => acc + item.qty * item.harga, 0);
       document.querySelectorAll('#total-pesanan').forEach(el => {
         el.innerText = total > 0 ? `Total Pesanan: Rp${total.toLocaleString()}` : '';
       });
+
+      const teks = `Halo Warung Teugeup Kameumeut,%0ASaya ingin memesan:%0A${daftar}%0A%0ATotal: Rp${total.toLocaleString()}%0A%0AData Pemesan:%0ANama: ${nama}%0AAlamat: ${alamat}%0ANo HP: ${hp}`;
+      const link = `https://wa.me/${nomor}?text=${teks}`;
+
+      if (document.getElementById('pesanBtn')) document.getElementById('pesanBtn').href = link;
+      if (document.getElementById('pesanBtn2')) document.getElementById('pesanBtn2').href = link;
     }
 
     function tampilkanHalaman(id) {
@@ -125,9 +147,23 @@
       document.getElementById(id).classList.add('active');
     }
 
-    // Inisialisasi saat halaman dimuat
-    tampilkanMenu(daftarMakanan, 'daftar-makanan');
-    tampilkanMenu(daftarMinuman, 'daftar-minuman');
+    function simpanDataPemesan(e) {
+      e.preventDefault();
+      localStorage.setItem('namaPemesan', document.getElementById('namaPemesan').value);
+      localStorage.setItem('alamatPemesan', document.getElementById('alamatPemesan').value);
+      localStorage.setItem('hpPemesan', document.getElementById('hpPemesan').value);
+      document.getElementById('form-pemesan').style.display = 'none';
+      updateLinkWA();
+    }
+
+    window.onload = () => {
+      if (!localStorage.getItem('namaPemesan')) {
+        document.getElementById('form-pemesan').style.display = 'flex';
+      }
+      tampilkanMenu(daftarMakanan, 'daftar-makanan');
+      tampilkanMenu(daftarMinuman, 'daftar-minuman');
+      updateLinkWA();
+    };
   </script>
 </body>
 </html>
